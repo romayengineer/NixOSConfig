@@ -1,0 +1,10 @@
+[user]
+	signingkey = E44EA7EB9F20293DA65F59B3EEA161CDBC981F01
+	name = Maximiliano Romay Figueroa
+	email = romayengineer@gmail.com
+[commit]
+	gpgsign = true
+[tag]
+	gpgsign = true
+[core]
+	sshCommand = "ssh -i ~/.ssh/id_ed25519 -F /dev/null"
