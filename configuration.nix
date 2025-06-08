@@ -115,6 +115,14 @@
     })
   ];
 
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+    # Use the new option and point it to the actual GNOME 3 pinentry package.
+    # This is necessary to run gpg --full-generate-key this pinentry asks for the password
+    pinentryPackage = pkgs.pinentry-gnome3;
+  };
+
   services.flatpak.enable = true;
   # configure flathub
   # flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -127,6 +135,7 @@
     # Shell Utils
     wget
     ripgrep
+    gnupg
     # Browsers
     chromium
     # to install google-chrome
