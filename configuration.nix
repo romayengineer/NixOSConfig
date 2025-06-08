@@ -58,6 +58,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable the Docker daemon service
+  virtualisation.docker.enable = true;
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -81,7 +84,7 @@
   users.users.maxirom7 = {
     isNormalUser = true;
     description = "maxirom7";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -150,6 +153,8 @@
     vim
     vscode
     python314
+    docker
+    docker-compose
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
