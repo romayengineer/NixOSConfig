@@ -105,11 +105,13 @@
   # This is to support for example micorsoft teams
   # nixpkgs.config.allowUnsupportedSystem = true;
 
-
   nixpkgs.overlays = [
     (self: super: {
       # This patches the hash for workspacesclient.nix that aws-workspaces depends on
       aws-workspaces = self.callPackage ./patches/nixpkgs/pkgs/by-name/aw/aws-workspaces/package.nix { };
+      # Download .tar.gz from https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
+      # Then run nix-prefetch-url file://$PWD/linuxx64-25.03.0.66.tar.gz
+      citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/default.nix { }).citrix_workspace_25_03_0;
     })
   ];
 
@@ -125,7 +127,7 @@
     # teams # Not supported use in browser instead
     zoom-us
     aws-workspaces
-    # citrix_workspace
+    citrix_workspace # the name of the folder is citrix-workspace
     # Code IDE / Interpreter / Compilers / etc
     git
     vim
