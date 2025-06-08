@@ -95,8 +95,8 @@
 
   nix.settings = {
     experimental-features = [
-      # "nix-command"
-      # "flakes"
+      "nix-command"
+      "flakes"
       # "pipe-operators"
     ];
   };
@@ -109,23 +109,28 @@
   nixpkgs.overlays = [
     (self: super: {
       # This patches the hash for workspacesclient.nix that aws-workspaces depends on
-      aws-workspaces = self.callPackage ./patches/aws-workspaces/package.nix { };
+      aws-workspaces = self.callPackage ./patches/nixpkgs/pkgs/by-name/aw/aws-workspaces/package.nix { };
     })
   ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    # Shell Utils
     wget
-    git
-    vscode
     ripgrep
+    # Browsers
     chromium
-    python314
-    # teams # Not supported
+    # Tools for VDI / Conference / etc
+    # teams # Not supported use in browser instead
     zoom-us
     aws-workspaces
+    # citrix_workspace
+    # Code IDE / Interpreter / Compilers / etc
+    git
+    vim
+    vscode
+    python314
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
