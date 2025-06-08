@@ -108,15 +108,8 @@
 
   nixpkgs.overlays = [
     (self: super: {
-      # When anything asks for 'aws-workspaces'...
-      aws-workspaces =
-        # ...ignore the one from nixpkgs and instead build the one
-        # defined in our local 'package.nix' file.
-        self.callPackage ./patches/aws-workspaces/package.nix {
-          # We pass an empty set because callPackage is smart enough
-          # to find the dependencies (like gtk3, cairo, etc.) from
-          # the main package set automatically.
-        };
+      # This patches the hash for workspacesclient.nix that aws-workspaces depends on
+      aws-workspaces = self.callPackage ./patches/aws-workspaces/package.nix { };
     })
   ];
 
@@ -132,7 +125,6 @@
     python314
     # teams # Not supported
     zoom-us
-    # workspacesclient
     aws-workspaces
   ];
 
