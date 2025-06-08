@@ -115,14 +115,22 @@
     })
   ];
 
+  services.flatpak.enable = true;
+  # configure flathub
+  # flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Package managers
+    flatpak
     # Shell Utils
     wget
     ripgrep
     # Browsers
     chromium
+    # to install google-chrome
+    # flatpak install flathub com.google.Chrome
     # Tools for VDI / Conference / etc
     # teams # Not supported use in browser instead
     zoom-us
