@@ -95,15 +95,30 @@
 
   nix.settings = {
     experimental-features = [
-      "nix-command"
-      "flakes"
-      "pipe-operators"
+      # "nix-command"
+      # "flakes"
+      # "pipe-operators"
     ];
   };
 
   # Microsoft teams is not supported
   # This is to support for example micorsoft teams
   # nixpkgs.config.allowUnsupportedSystem = true;
+
+
+  nixpkgs.overlays = [
+    (self: super: {
+      # When anything asks for 'aws-workspaces'...
+      aws-workspaces =
+        # ...ignore the one from nixpkgs and instead build the one
+        # defined in our local 'package.nix' file.
+        self.callPackage ./patches/aws-workspaces/package.nix {
+          # We pass an empty set because callPackage is smart enough
+          # to find the dependencies (like gtk3, cairo, etc.) from
+          # the main package set automatically.
+        };
+    })
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -117,6 +132,8 @@
     python314
     # teams # Not supported
     zoom-us
+    # workspacesclient
+    aws-workspaces
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

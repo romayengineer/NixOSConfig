@@ -20,7 +20,10 @@ stdenv.mkDerivation (finalAttrs: {
       "https://d3nt0h4h6pmmc4.cloudfront.net/ubuntu/dists/jammy/main/binary-amd64/workspacesclient_${finalAttrs.version}_amd64.deb"
       "https://d3nt0h4h6pmmc4.cloudfront.net/new_workspacesclient_jammy_amd64.deb"
     ];
-    hash = "sha256-BDxMycVgWciJZe8CtElXaWVnqYDQO5NmawK10GvP2+k=";
+    # Original
+    # hash = "sha256-BDxMycVgWciJZe8CtElXaWVnqYDQO5NmawK10GvP2+k=";
+    # New
+    hash = "sha256-VPNZN9AsrGJ56O8B5jxlgLMvrUViTv6yto8c5pGQc0A=";
   };
 
   nativeBuildInputs = [
