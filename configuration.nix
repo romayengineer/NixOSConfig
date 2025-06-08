@@ -101,6 +101,10 @@
     ];
   };
 
+  # Microsoft teams is not supported
+  # This is to support for example micorsoft teams
+  # nixpkgs.config.allowUnsupportedSystem = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -108,6 +112,11 @@
     wget
     git
     vscode
+    ripgrep
+    chromium
+    python314
+    # teams # Not supported
+    zoom-us
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
