@@ -114,7 +114,22 @@
       aws-workspaces = self.callPackage ./patches/nixpkgs/pkgs/by-name/aw/aws-workspaces/package.nix { };
       # Download .tar.gz from https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
       # Then run nix-prefetch-url file://$PWD/linuxx64-25.03.0.66.tar.gz
-      citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/default.nix { }).citrix_workspace_25_03_0;
+      # Old Implementation
+      # citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/default.nix { }).citrix_workspace_25_03_0;
+      # Lets call generic.nix directly
+      citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/generic.nix {
+        hash = "052zibykhig9091xl76z2x9vn4f74w5q8i9frlpc473pvfplsczk";
+        homepage = "https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html";
+        prefix = "linuxx64";
+        version = "25.03.0.66";
+        # The reason why we need to call generic.nix directly and not default
+        # is that generic.nix supports extraCerts and default.nix does not
+        extraCerts = [
+          /etc/nixos/certs/citrix/healthfirst.org.digicert.global.pem
+          /etc/nixos/certs/citrix/healthfirst.org.digicert.pem
+          /etc/nixos/certs/citrix/healthfirst.org.pem
+        ];
+      });
     })
   ];
 
