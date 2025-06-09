@@ -141,13 +141,13 @@
     gnupg
     # Browsers
     chromium
-    # to install google-chrome
-    # flatpak install flathub com.google.Chrome
+    ### to install google-chrome
+    ### flatpak install flathub com.google.Chrome
     # Tools for VDI / Conference / etc
-    # teams # Not supported use in browser instead
     zoom-us
     aws-workspaces
-    citrix_workspace # the name of the folder is citrix-workspace
+    citrix_workspace
+    ### teams # Not supported use in browser instead
     # Code IDE / Interpreter / Compilers / etc
     git
     vim
@@ -155,6 +155,8 @@
     python314
     docker
     docker-compose
+    # Docs
+    obsidian
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
