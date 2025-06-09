@@ -108,6 +108,12 @@
   # This is to support for example micorsoft teams
   # nixpkgs.config.allowUnsupportedSystem = true;
 
+  security.pki.certificateFiles = [
+    ./certs/citrix/healthfirst.org.pem
+    ./certs/citrix/healthfirst.org.digicert.pem
+    ./certs/citrix/healthfirst.org.digicert.global.pem
+  ];
+
   nixpkgs.overlays = [
     (self: super: {
       # This patches the hash for workspacesclient.nix that aws-workspaces depends on
@@ -122,13 +128,6 @@
         homepage = "https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html";
         prefix = "linuxx64";
         version = "25.03.0.66";
-        # The reason why we need to call generic.nix directly and not default
-        # is that generic.nix supports extraCerts and default.nix does not
-        extraCerts = [
-          /etc/nixos/certs/citrix/healthfirst.org.digicert.global.pem
-          /etc/nixos/certs/citrix/healthfirst.org.digicert.pem
-          /etc/nixos/certs/citrix/healthfirst.org.pem
-        ];
       });
     })
   ];
