@@ -147,12 +147,15 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Audio
+    pavucontrol # let me increase volume higher than 100%
     # Package managers
     flatpak
     # Shell Utils
     wget
     ripgrep
     gnupg
+    openssl
     # Browsers
     chromium
     ### to install google-chrome
