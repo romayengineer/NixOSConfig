@@ -156,6 +156,7 @@
     ripgrep
     gnupg
     openssl
+    htop
     # Browsers
     chromium
     ### to install google-chrome
@@ -169,6 +170,7 @@
     git
     vim
     vscode
+    jetbrains.idea-community
     python314
     docker
     docker-compose
