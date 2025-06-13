@@ -202,7 +202,7 @@
     # Docs
     obsidian
     # Gaming
-    # steam
+    steam
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
