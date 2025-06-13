@@ -140,6 +140,31 @@
     pinentryPackage = pkgs.pinentry-gnome3;
   };
 
+  programs.steam.enable = true;
+
+  services.xserver.videoDrivers = [ "modesetting" ]; # Use the modern kernel driver
+
+  nixpkgs.config.supportedSystems = [ "x86_64-linux" "i686-linux" ];
+
+  hardware.opengl = {
+    enable = true;
+    # This is the single most important line for Steam to work.
+    driSupport32Bit = true;
+    # Add extra packages for full Vulkan and video acceleration support.
+    extraPackages = with pkgs; [
+      intel-media-driver  # For video decoding
+      vulkan-loader       # The main Vulkan loader
+      vulkan-tools        # Provides useful Vulkan utilities
+    ];
+    extraPackages32 = with pkgs; [
+      pkgsi686Linux.vulkan-loader
+    ];
+  };
+
+  # Optional but recommended: Explicitly enable Vulkan support
+  # hardware.vulkan.enable = true; # This like triggers the error !!!
+  # hardware.vulkan.intel.enable = true;
+
   services.flatpak.enable = true;
   # configure flathub
   # flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -176,6 +201,8 @@
     docker-compose
     # Docs
     obsidian
+    # Gaming
+    # steam
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
