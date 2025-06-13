@@ -202,6 +202,7 @@
     python314
     docker
     docker-compose
+    stdenv # c++ compiler
     # Docs
     obsidian
     # Gaming
