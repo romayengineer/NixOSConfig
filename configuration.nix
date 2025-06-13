@@ -172,6 +172,8 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # Desktop
+    gnome-browser-connector
     # Audio
     pavucontrol # let me increase volume higher than 100%
     # Package managers
@@ -182,6 +184,7 @@
     gnupg
     openssl
     htop
+    lsof
     # Browsers
     chromium
     ### to install google-chrome
@@ -202,7 +205,7 @@
     # Docs
     obsidian
     # Gaming
-    steam
+    ## steam
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
