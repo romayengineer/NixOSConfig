@@ -124,11 +124,17 @@
       # citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/default.nix { }).citrix_workspace_25_03_0;
       # Lets call generic.nix directly
       citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/generic.nix {
-        hash = "052zibykhig9091xl76z2x9vn4f74w5q8i9frlpc473pvfplsczk";
+        hash = "0fwqsxggswms40b5k8saxpm1ghkxppl27x19w8jcslq1f0i1fwqx";
         homepage = "https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html";
         prefix = "linuxx64";
-        version = "25.03.0.66";
+        version = "25.05.0.44";
       });
+      # every time there is an update run this command
+      # nix-prefetch-url file://$PWD/linuxx64-25.05.0.44.tar.gz
+      # path is '/nix/store/g2icf19is4l443fvzrrq1w4gf9lnkqbj-linuxx64-25.05.0.44.tar.gz'
+      # 0fwqsxggswms40b5k8saxpm1ghkxppl27x19w8jcslq1f0i1fwqx
+      #
+      # once the nix-prefetch-url command is run the .tar.gz can be deleted as now is stored in /nix/store/
     })
   ];
 
@@ -146,10 +152,10 @@
 
   nixpkgs.config.supportedSystems = [ "x86_64-linux" "i686-linux" ];
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     # This is the single most important line for Steam to work.
-    driSupport32Bit = true;
+    enable32Bit = true;
     # Add extra packages for full Vulkan and video acceleration support.
     extraPackages = with pkgs; [
       intel-media-driver  # For video decoding

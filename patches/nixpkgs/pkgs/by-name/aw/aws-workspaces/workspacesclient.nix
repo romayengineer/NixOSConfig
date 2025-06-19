@@ -12,7 +12,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "workspacesclient";
-  version = "2024.8.5191";
+  version = "2025.0.5296";
 
   src = fetchurl {
     urls = [
