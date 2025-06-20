@@ -46,8 +46,8 @@
   services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -114,20 +114,26 @@
     ./certs/citrix/healthfirst.org.digicert.global.pem
   ];
 
+  # In unstable these two issues are solved
+  #
   nixpkgs.overlays = [
     (self: super: {
       # This patches the hash for workspacesclient.nix that aws-workspaces depends on
-      aws-workspaces = self.callPackage ./patches/nixpkgs/pkgs/by-name/aw/aws-workspaces/package.nix { };
+      # aws-workspaces = self.callPackage ./patches/nixpkgs/pkgs/by-name/aw/aws-workspaces/package.nix { };
       # Download .tar.gz from https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html
       # Then run nix-prefetch-url file://$PWD/linuxx64-25.03.0.66.tar.gz
       # Old Implementation
       # citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/default.nix { }).citrix_workspace_25_03_0;
       # Lets call generic.nix directly
       citrix_workspace = (self.callPackage ./patches/nixpkgs/pkgs/applications/networking/remote/citrix-workspace/generic.nix {
-        hash = "0fwqsxggswms40b5k8saxpm1ghkxppl27x19w8jcslq1f0i1fwqx";
+        hash = "0kylvqdzkw0635mbb6r5k1lamdjf1hr9pk5rxcff63z4f8q0g3zf";
+        version = "24.11.0.85";
+        # hash = "052zibykhig9091xl76z2x9vn4f74w5q8i9frlpc473pvfplsczk";
+        # version = "25.03.0.66";
+        # hash = "0fwqsxggswms40b5k8saxpm1ghkxppl27x19w8jcslq1f0i1fwqx";
+        # version = "25.05.0.44";
         homepage = "https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html";
         prefix = "linuxx64";
-        version = "25.05.0.44";
       });
       # every time there is an update run this command
       # nix-prefetch-url file://$PWD/linuxx64-25.05.0.44.tar.gz
@@ -135,8 +141,24 @@
       # 0fwqsxggswms40b5k8saxpm1ghkxppl27x19w8jcslq1f0i1fwqx
       #
       # once the nix-prefetch-url command is run the .tar.gz can be deleted as now is stored in /nix/store/
+      #
+      steam = super.steam.override {
+        extraLibraries = p: [ # 'p' here represents the package set
+          p.fuse
+          p.e2fsprogs
+        ];
+        # Tell bubblewrap what to do:
+        extraBwrapArgs = [
+          "--dev-bind /dev/fuse /dev/fuse" # 1. Pass in the FUSE device
+          "--cap-add CAP_SYS_ADMIN"            # 2. Grant permission to use it
+        ];
+      };
     })
   ];
+
+  # Allows user-level FUSE mounts, which is required by AppImages,
+  # especially when run inside sandboxed environments like steam-run.
+  programs.fuse.userAllowOther = true;
 
   programs.gnupg.agent = {
     enable = true;
@@ -161,11 +183,16 @@
       intel-media-driver  # For video decoding
       vulkan-loader       # The main Vulkan loader
       vulkan-tools        # Provides useful Vulkan utilities
+      intel-ocl           # OpenCL (not OpenGL but OpenCL needed for GPU crypto miners) called intel-opencl-icd in ubuntu
     ];
     extraPackages32 = with pkgs; [
       pkgsi686Linux.vulkan-loader
     ];
   };
+
+  # hardware.opengl = {
+  #   driSupport = true;
+  # };
 
   # Optional but recommended: Explicitly enable Vulkan support
   # hardware.vulkan.enable = true; # This like triggers the error !!!
@@ -184,6 +211,10 @@
     pavucontrol # let me increase volume higher than 100%
     # Package managers
     flatpak
+    # Libs
+    fuse
+    mesa
+    e2fsprogs
     # Shell Utils
     wget
     ripgrep
@@ -191,6 +222,8 @@
     openssl
     htop
     lsof
+    zip
+    appimage-run
     # Browsers
     chromium
     ### to install google-chrome
@@ -198,7 +231,7 @@
     # Tools for VDI / Conference / etc
     zoom-us
     aws-workspaces
-    citrix_workspace
+    # citrix_workspace # TODO error: auto-patchelf could not satisfy dependency libxml2.so.2
     ### teams # Not supported use in browser instead
     # Code IDE / Interpreter / Compilers / etc
     git
@@ -212,7 +245,7 @@
     # Docs
     obsidian
     # Gaming
-    ## steam
+    steam
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
