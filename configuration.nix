@@ -114,9 +114,31 @@
     ./certs/citrix/healthfirst.org.digicert.global.pem
   ];
 
+
+
+
+
+
   # In unstable these two issues are solved
   #
-  nixpkgs.overlays = [
+  nixpkgs.overlays =  
+  let
+    # libxml2 was upgraded in master (unstable) from version 2.13.8 to version 2.14.3
+    # and this wroke the citrix-workspace build as citrix requires libxml2.so.2 and this
+    # is only in version 2.13.8 the new version 2.14.3 changes the name to libxml2.so.16
+    # so because citrix-workspace requires this file we clone the old nixpkgs version with
+    # libxml2 version 2.13.8 that has this libxml2.so.2 file that it needs
+
+    # Fetch a nixpkgs revision known to have libxml2 version 2.13.8
+    nixpkgs-libxml2-2_13_8 = builtins.fetchTarball "https://github.com/NixOS/nixpkgs/archive/2e32e6872519f05991261988d11b6ba0f6db33a4.tar.gz";
+
+    # Import it as a package set. We can't access `config` here, so we pass a minimal one.
+    pkgs-libxml2-2_13_8 = import nixpkgs-libxml2-2_13_8 { config = {}; overlays = []; };
+
+    # Now, we define `libxml2-2_13_8` to point to the old version 2.13.8.
+    libxml2-2_13_8 = pkgs-libxml2-2_13_8.libxml2;
+  in
+  [
     (self: super: {
       # This patches the hash for workspacesclient.nix that aws-workspaces depends on
       # aws-workspaces = self.callPackage ./patches/nixpkgs/pkgs/by-name/aw/aws-workspaces/package.nix { };
@@ -134,6 +156,8 @@
         # version = "25.05.0.44";
         homepage = "https://www.citrix.com/downloads/workspace-app/linux/workspace-app-for-linux-latest.html";
         prefix = "linuxx64";
+        # specify version 2.13.8
+        libxml2 = libxml2-2_13_8;
       });
       # every time there is an update run this command
       # nix-prefetch-url file://$PWD/linuxx64-25.05.0.44.tar.gz
@@ -183,7 +207,8 @@
       intel-media-driver  # For video decoding
       vulkan-loader       # The main Vulkan loader
       vulkan-tools        # Provides useful Vulkan utilities
-      intel-ocl           # OpenCL (not OpenGL but OpenCL needed for GPU crypto miners) called intel-opencl-icd in ubuntu
+      intel-ocl           # OpenCL (not OpenGL but OpenCL needed for GPU crypto miners) called intel-opencl-icd in ubunt
+      ocl-icd
     ];
     extraPackages32 = with pkgs; [
       pkgsi686Linux.vulkan-loader
@@ -224,6 +249,7 @@
     lsof
     zip
     appimage-run
+    xorg.xhost
     # Browsers
     chromium
     ### to install google-chrome
@@ -231,7 +257,7 @@
     # Tools for VDI / Conference / etc
     zoom-us
     aws-workspaces
-    # citrix_workspace # TODO error: auto-patchelf could not satisfy dependency libxml2.so.2
+    citrix_workspace # TODO error: auto-patchelf could not satisfy dependency libxml2.so.2
     ### teams # Not supported use in browser instead
     # Code IDE / Interpreter / Compilers / etc
     git
@@ -242,6 +268,16 @@
     docker
     docker-compose
     stdenv # c++ compiler
+    rustc
+    glib
+    pkg-config # Tool that allows packages to find out information about other packages (wrapper script)
+    gtk3
+    cargo # Rust package manager
+    gcc # C compiler
+    gnumake # installs make
+    cmake # installs cmake, make and cmake are different
+    protobuf
+    nodejs_24
     # Docs
     obsidian
     # Gaming
