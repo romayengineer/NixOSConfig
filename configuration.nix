@@ -114,14 +114,9 @@
     ./certs/citrix/healthfirst.org.digicert.global.pem
   ];
 
-
-
-
-
-
   # In unstable these two issues are solved
   #
-  nixpkgs.overlays =  
+  nixpkgs.overlays =
   let
     # libxml2 was upgraded in master (unstable) from version 2.13.8 to version 2.14.3
     # and this wroke the citrix-workspace build as citrix requires libxml2.so.2 and this
@@ -166,17 +161,19 @@
       #
       # once the nix-prefetch-url command is run the .tar.gz can be deleted as now is stored in /nix/store/
       #
-      steam = super.steam.override {
-        extraLibraries = p: [ # 'p' here represents the package set
-          p.fuse
-          p.e2fsprogs
-        ];
-        # Tell bubblewrap what to do:
-        extraBwrapArgs = [
-          "--dev-bind /dev/fuse /dev/fuse" # 1. Pass in the FUSE device
-          "--cap-add CAP_SYS_ADMIN"            # 2. Grant permission to use it
-        ];
-      };
+      # This was to run tari unviers with steam-run
+      # steam = super.steam.override {
+      #   extraLibraries = p: [ # 'p' here represents the package set
+      #     p.fuse
+      #     p.e2fsprogs
+      #     p.bubblewrap
+      #   ];
+      #   # Tell bubblewrap what to do:
+      #   # extraBwrapArgs = [
+      #   #   "--dev-bind /dev/fuse /dev/fuse"     # 1. Pass in the FUSE device
+      #   #   "--cap-add CAP_SYS_ADMIN"            # 2. Grant permission to use it
+      #   # ];
+      # };
     })
   ];
 
@@ -257,7 +254,7 @@
     # Tools for VDI / Conference / etc
     zoom-us
     aws-workspaces
-    citrix_workspace # TODO error: auto-patchelf could not satisfy dependency libxml2.so.2
+    citrix_workspace
     ### teams # Not supported use in browser instead
     # Code IDE / Interpreter / Compilers / etc
     git
@@ -265,19 +262,10 @@
     vscode
     jetbrains.idea-community
     python314
+    pyenv
     docker
     docker-compose
     stdenv # c++ compiler
-    rustc
-    glib
-    pkg-config # Tool that allows packages to find out information about other packages (wrapper script)
-    gtk3
-    cargo # Rust package manager
-    gcc # C compiler
-    gnumake # installs make
-    cmake # installs cmake, make and cmake are different
-    protobuf
-    nodejs_24
     # Docs
     obsidian
     # Gaming

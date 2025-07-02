@@ -42,8 +42,10 @@
   cacert,
   systemd,
   libcxx,
-  # New add the dependency here
+  # -- New --
   sane-backends,
+  # libproxy, # needed for version 25.05.0.44
+  # -- NEW --
   symlinkJoin,
   libpulseaudio,
   pcsclite,
@@ -175,9 +177,11 @@ stdenv.mkDerivation rec {
     xorg.libXScrnSaver
     xorg.libXtst
     zlib
-    # New
+    # -- New --
     # the new version 25.03.0.66 needs libsane.so.1, this installs that
     sane-backends
+    # libproxy
+    # -- New --
   ];
 
   runtimeDependencies = [
