@@ -262,6 +262,9 @@
     vscode
     jetbrains.idea-community
     python314
+    go
+    gopls # go language server
+    go-tools # installs for example staticcheck that go vscode extension needs
     pyenv
     docker
     docker-compose
