@@ -61,6 +61,11 @@
   # Enable the Docker daemon service
   virtualisation.docker.enable = true;
 
+
+  # Enable virtualization and ADB system-wide
+  virtualisation.libvirtd.enable = true;
+  programs.adb.enable = true;
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -84,7 +89,11 @@
   users.users.maxirom7 = {
     isNormalUser = true;
     description = "maxirom7";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [
+      "networkmanager" "wheel" "docker"
+      # Groups for Android Studio and ADB
+      "kvm" "libvirtd" "adbusers"
+    ];
     packages = with pkgs; [
     #  thunderbird
     ];
